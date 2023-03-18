@@ -6,7 +6,7 @@ on:
     - cron: "0 6 * * *"
 jobs:
     unit:
-        name: PHP ${{ matrix.php }}
+        name: WP CLI Commands List
         runs-on: ubuntu-latest
         strategy:
             fail-fast: true
@@ -22,13 +22,11 @@ jobs:
             - name: Generate WP-CLI Commands List
               run: wp cli cmd-dump > ${{ github.workspace }}/data/wpcli-commands.json
 
-            - name: Configure Git identity
-              run: |
-                git config --global user.email "cool-kids@docs-dang.it"
-                git config --global user.name "Cloudfest Hackathon Cool Kids"
-
-            - name: Commit and push changes
-              run: |
-                git add data/wpcli-commands.json
-                git commit -m "Update WP-CLI Commands List"
-                git push --force
+            - name: Commit any changes
+              uses: stefanzweifel/git-auto-commit-action@v4
+              with:
+                  commit_message: 'Update WP-CLI Commands List'
+                  commit_options: '--no-verify'
+                  commit_user_name: 'GitHub Actions'
+                  commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+                  commit_author: 'GitHub Actions <github-actions[bot]@users.noreply.github.com>'
