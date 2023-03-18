@@ -4,6 +4,7 @@ namespace Docsdangit\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Docsdangit\Parsers\WordPress_Docs;
 
 class Ingest extends Command
 {
@@ -21,6 +22,9 @@ EOT);
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $wp_docs = new WordPress_Docs();
+        $wp_docs->parse();
+
         $output->writeln('Done ✅');
         return Command::SUCCESS;
     }

@@ -7,7 +7,7 @@
 
  interface Parser
  {
-     public function parse($url);
+     public function parse();
 
      public function reset();
  }
