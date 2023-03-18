@@ -1,0 +1,34 @@
+name: Update WP-CLI Commands List
+on:
+    workflow_dispatch:
+    schedule:
+    # Once a day at 6am
+    - cron: "0 6 * * *"
+jobs:
+    unit:
+        name: PHP ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: true
+        steps:
+            - name: Check out source code
+              uses: actions/checkout@v3
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  tools: wp-cli
+
+            - name: Generate WP-CLI Commands List
+              run: wp cli cmd-dump > ${{ github.workspace }}/data/wpcli-commands.json
+
+            - name: Configure Git identity
+              run: |
+                git config --global user.email "cool-kids@docs-dang.it"
+                git config --global user.name "Cloudfest Hackathon Cool Kids"
+
+            - name: Commit and push changes
+              run: |
+                git add data/wpcli-commands.json
+                git commit -m "Update WP-CLI Commands List"
+                git push --force
