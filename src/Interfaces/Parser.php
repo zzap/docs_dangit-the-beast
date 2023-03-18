@@ -3,7 +3,7 @@
  * Parser interface
  */
 
- namespace Docsdangit\Command;
+ namespace Docsdangit\Interfaces;
 
  interface Parser
  {
