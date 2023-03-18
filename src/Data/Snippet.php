@@ -119,5 +119,9 @@ class Snippet {
     public function get_updated() : string {
         return $this->updated;
     }
+
+    public function get_all() : array {
+        return (array) $this;
+    }
     
 }
