@@ -1,6 +1,6 @@
 <?php
 /**
- * Plaintext writer
+ * WP Docs Parser
  *
  * @package Docsdangit
  */
