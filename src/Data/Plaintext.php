@@ -28,7 +28,7 @@ class Plaintext implements Writer {
      * Write the snippet to a file.
      */
     public function write() {
-        $file = fopen( $this->filename, 'a');
+        $file = fopen( $this->filename, 'w');
         fwrite( $file, print_r( $this->snippet->get_all(), true ) );
         fclose( $file );
     }
