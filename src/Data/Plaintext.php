@@ -13,11 +13,23 @@ class Plaintext implements Writer {
 
     protected string $filename;
 
+    /**
+     * Plaintext constructor.
+     * 
+     * @param Snippet $snippet
+     * @param string $filename
+     */
     public function __construct( Snippet $snippet, string $filename ) {
         $this->snippet = $snippet;
+        $this->filename = $filename;
     }
 
+    /**
+     * Write the snippet to a file.
+     */
     public function write() {
         $file = fopen( $this->filename, 'a');
+        fwrite( $file, print_r( $this->snippet->get_all(), true ) );
+        fclose( $file );
     }
 }
