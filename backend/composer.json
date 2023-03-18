@@ -1,0 +1,19 @@
+{
+  "name": "docs-dangit/backend",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": "~8.2",
+    "api-platform/core": "^3.0",
+    "symfony/framework-bundle": "^6.2"
+  }
+  ,
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  },
+  "autoload": {
+    "psr-4": {
+      "Docsdangit\\Backend\\": "src/"
+    }
+  }
+}
