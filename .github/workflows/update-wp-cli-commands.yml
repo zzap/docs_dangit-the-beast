@@ -5,9 +5,11 @@ on:
     # Once a day at 6am
     - cron: "0 6 * * *"
 jobs:
-    unit:
+    wp-cli:
         name: WP CLI Commands List
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         strategy:
             fail-fast: true
         steps:
