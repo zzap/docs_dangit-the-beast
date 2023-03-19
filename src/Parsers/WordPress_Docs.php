@@ -43,7 +43,7 @@ class WordPress_Docs implements Parser {
 
     public function reset() {}
 
-    private function parse_snippet( $item ) {
+    public function parse_snippet( $item ) : Snippet {
         // parse snippet
         $id = hash( 'sha256', $item->link );
         $pattern = "/<code .*>(.*?)<\/code>/s";
@@ -61,7 +61,7 @@ class WordPress_Docs implements Parser {
             'tags' => ['WordPress'],
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
-            'language' => 'english',
+            'language' => 'en-US',
             'version' => $this->get_source_version(),
             'url' => $item->link,
             'creator' => $item->author_name,
