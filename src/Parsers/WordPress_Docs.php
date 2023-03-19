@@ -6,11 +6,10 @@
  */
 namespace Docsdangit\Parsers;
 
-use Docsdangit\Interfaces\Parser;
-use Docsdangit\Data\Snippet;
 use Docsdangit\Data\Plaintext;
+use Docsdangit\Data\Snippet;
 
-class WordPress_Docs implements Parser {
+class WordPress_Docs implements ParserInterface {
     public function __construct() {}
 
     public function parse() {
@@ -58,7 +57,7 @@ class WordPress_Docs implements Parser {
             'code_creation_date' => $item->date,
             'updated' => $now
         ];
-        
+
         $snippet = new Snippet( ...$snippet_data );
         return $snippet;
     }

@@ -1,15 +1,25 @@
 <?php
+
 namespace Docsdangit\Command;
 
+use Docsdangit\Parsers\ParserInterface;
+use Docsdangit\Reader\ReaderInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Docsdangit\Parsers\WordPress_Docs;
-use Docsdangit\Parsers\WP_CLI;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-class Ingest extends Command
+final class Ingest extends Command
 {
-    protected function configure()
+    public function __construct(
+        private readonly ReaderInterface $reader,
+        private readonly ParserInterface $parser
+    )
+    {
+        parent::__construct();
+    }
+
+    protected function configure(): void
     {
         $this->setName('ingest')
             ->setDescription("Ingest docs")
@@ -17,18 +27,23 @@ class Ingest extends Command
 Ingest docs from different sources.
 
 Usage:
-<info>docsdangit ingest</info>
-EOT);
+<info>bin/docsdangit ingest</info>
+EOT
+            );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $wp_docs = new WordPress_Docs();
-        $wp_docs->parse();
-        $wp_docs = new WP_CLI();
-        $wp_docs->parse();
+        $io = new SymfonyStyle($input, $output);
+        $io->title('Reading Json from local file');
 
-        $output->writeln('Done ✅');
+        $commentsData = $this->reader->read();
+        $count = count($commentsData);
+
+        $io->text(sprintf("Processing Data. Found%s items", $count));
+        $this->parser->parse($commentsData);
+
+
         return Command::SUCCESS;
     }
 }
