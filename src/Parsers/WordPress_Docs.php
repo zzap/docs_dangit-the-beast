@@ -50,7 +50,7 @@ class WordPress_Docs implements Parser {
             'tags' => ['WordPress'],
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
-            'language' => 'english',
+            'language' => 'en-US',
             'version' => 1,
             'url' => $item->link,
             'creator' => $item->author_name,
