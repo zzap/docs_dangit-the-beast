@@ -9,4 +9,6 @@ interface Repository
 	public function fetch(string|null $search, int $limit, int $offset): array;
 
 	public function fetchSingle(string $hash): Entity;
+
+	public function cleanup(string $url): void;
 }

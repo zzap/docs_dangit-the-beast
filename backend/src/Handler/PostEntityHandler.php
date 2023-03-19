@@ -28,6 +28,7 @@ final class PostEntityHandler implements RequestHandlerInterface
 		/** @var DocsEntry $entity */
 		$entities = $this->requestBodyConverter->convert($request);
 
+		$this->repository->cleanup((string)$entities[0]->url);
 		foreach ($entities as $entity) {
 			$this->repository->store($entity);
 		}

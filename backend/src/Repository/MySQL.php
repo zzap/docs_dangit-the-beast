@@ -22,7 +22,7 @@ final class MySQL implements RepositoryInterface
 		private DatabaseEntryToDocsEntry $dbToDocs,
 	) {}
 
-	public function clean(string $url): void
+	public function cleanup(string $url): void
 	{
 		$hash = hash('sha512', $url);
 		$query = $this->dbConnection->prepare('DELETE FROM docentries WHERE entryhash = :hash');
