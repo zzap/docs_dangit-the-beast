@@ -1,14 +1,14 @@
 <?php
 /**
  * Snippet class
- * 
+ *
  * @package Docsdangit
  */
 namespace Docsdangit\Data;
 
 class Snippet {
     private string $id;
-    private string $snippet;
+    private array $snippet;
     private string $context;
     private string $source;
     private array $tags;
@@ -24,8 +24,9 @@ class Snippet {
 
     /**
      * Snippet constructor.
-     * 
-     * @param string $snippet
+     *
+     * @param string $id
+     * @param array $snippet
      * @param string $context
      * @param string $source
      * @param array $tags
@@ -41,7 +42,7 @@ class Snippet {
      */
     public function __construct(
         string $id,
-        string $snippet,
+        array $snippet,
         string $context,
         string $source,
         array $tags,
@@ -75,7 +76,7 @@ class Snippet {
         return $this->id;
     }
 
-    public function get_snippet() : string {
+    public function get_snippet() : array {
         return $this->snippet;
     }
 
@@ -130,5 +131,5 @@ class Snippet {
     public function get_all() : array {
         return (array) $this;
     }
-    
+
 }

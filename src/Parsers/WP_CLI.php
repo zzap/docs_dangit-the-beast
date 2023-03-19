@@ -47,20 +47,26 @@ class WP_CLI implements Parser {
         $long_desc = $item->longdesc;
         $pattern = "/## EXAMPLES(.*?)##/s";
         preg_match( $pattern, $long_desc, $matches );
-        $code_snippet = count( $matches ) > 1 ? $matches[1] : '';
+        $code_snippets = [];
+        if( count( $matches ) > 1 ) {
+            $code_snippets[] = [
+                'language' => 'bash',
+                'code' => $matches[1]
+            ];
+        }
 
         $command_tags = [];
 
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
             'id' => $id,
-            'snippet' => $code_snippet,
+            'snippet' => $code_snippets,
             'context' => '',
             'source' => 'wp-cli',
             'tags' => ['WordPress'],
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
-            'language' => 'english',
+            'language' => 'en-US',
             'version' => $this->get_source_version(),
             'url' => $path,
             'creator' => '',

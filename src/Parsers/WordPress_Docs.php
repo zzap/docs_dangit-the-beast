@@ -11,7 +11,11 @@ use Docsdangit\Data\Snippet;
 use Docsdangit\Data\Plaintext;
 
 class WordPress_Docs implements Parser {
-    public function __construct() {}
+    private $wp_version;
+
+    public function __construct() {
+        $this->wp_version = $this->get_source_version();
+    }
 
     public function parse() {
         $url = 'https://developer.wordpress.org/wp-json/wp/v2/comments?per_page=100&page=';
@@ -21,7 +25,6 @@ class WordPress_Docs implements Parser {
             $raw = file_get_contents( $url . $i  );
             $json = json_decode( $raw );
             foreach( $json as $index => $item ) {
-                echo "Processing {$index} item...\n";
                 $snippet = $this->parse_snippet( $item );
                 $plainText = new Plaintext( $snippet, "dumps/{$item->id}.txt");
                 $plainText->write();
@@ -29,14 +32,36 @@ class WordPress_Docs implements Parser {
         }
     }
 
+    public function get_source_version() {
+        $url = 'https://api.wordpress.org/core/version-check/1.7/';
+        $raw = file_get_contents( $url );
+        $json = json_decode( $raw );
+        // There's also $json->offers[0]->version.
+        if ( is_object( $json ) && isset( $json->offers[0] ) ) {
+            return $json->offers[0]->current;
+        } else {
+            return null;
+        }
+    }
+
     public function reset() {}
 
-    private function parse_snippet( $item ) {
+    public function parse_snippet( $item ) : Snippet {
         // parse snippet
         $id = hash( 'sha256', $item->link );
-        $pattern = "/<code .*>(.*?)<\/code>/s";
-        preg_match( $pattern, $item->content->rendered, $matches );
-        $code_snippet = count( $matches ) > 1 ? $matches[1] : '';
+        $pattern = '/<code[^>]*lang="([^"]*)"[^>]*>(.*?)<\/code>/s';
+        preg_match_all( $pattern, $item->content->rendered, $matches );
+        $code_snippets = [];
+        $language_tags = [];
+        if( count( $matches ) > 1 ) {
+            foreach( $matches[1] as $index => $match ) {
+                $code_snippets[] = [
+                    'language' => $match,
+                    'code' => $matches[2][$index]
+                ];
+                $language_tags[] = $match;
+            }
+        }
 
         // get command tags
         $command_tags = [];
@@ -44,21 +69,21 @@ class WordPress_Docs implements Parser {
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
             'id' => $id,
-            'snippet' => $code_snippet,
+            'snippet' => $code_snippets,
             'context' => $item->content->rendered,
             'source' => 'reference',
             'tags' => ['WordPress'],
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
-            'language' => 'english',
-            'version' => 1,
+            'language' => 'en-US',
+            'version' => $this->wp_version,
             'url' => $item->link,
             'creator' => $item->author_name,
             'parse_date' => $now,
             'code_creation_date' => $item->date,
             'updated' => $now
         ];
-        
+
         $snippet = new Snippet( ...$snippet_data );
         return $snippet;
     }
