@@ -11,7 +11,11 @@ use Docsdangit\Data\Snippet;
 use Docsdangit\Data\Plaintext;
 
 class WordPress_Docs implements Parser {
-    public function __construct() {}
+    private $wp_version;
+
+    public function __construct() {
+        $this->wp_version = $this->get_source_version();
+    }
 
     public function reset() {}
 
@@ -29,6 +33,20 @@ class WordPress_Docs implements Parser {
             }
         }
     }
+
+    public function get_source_version() {
+        $url = 'https://api.wordpress.org/core/version-check/1.7/';
+        $raw = file_get_contents( $url );
+        $json = json_decode( $raw );
+        // There's also $json->offers[0]->version.
+        if ( is_object( $json ) && isset( $json->offers[0] ) ) {
+            return $json->offers[0]->current;
+        } else {
+            return null;
+        }
+    }
+
+    public function reset() {}
 
     public function parse_snippet( $item ) : Snippet {
         // parse snippet
@@ -60,7 +78,7 @@ class WordPress_Docs implements Parser {
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
             'language' => 'en-US',
-            'version' => 1,
+            'version' => $this->wp_version,
             'url' => $item->link,
             'creator' => $item->author_name,
             'parse_date' => $now,
