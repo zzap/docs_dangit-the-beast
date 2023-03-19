@@ -9,7 +9,12 @@ class Snippet_Test extends Docs_Dangit_Test {
     public function test_snippet() {
         $snippet = new Snippet(
             'id',
-            'snippet',
+            array(
+                array( 
+                    'language' => 'php',
+                    'code' => 'echo "Hello World!";',
+                )
+            ),
             'context',
             'source',
             array( 'tag1', 'tag2', 'tag3' ),
@@ -25,7 +30,8 @@ class Snippet_Test extends Docs_Dangit_Test {
         );
 
         $this->assertEquals( 'id', $snippet->get_id() );
-        $this->assertEquals( 'snippet', $snippet->get_snippet() );
+        $this->assertEquals( 'php', $snippet->get_snippets()[0]['language'] );
+        $this->assertEquals( 'echo "Hello World!";', $snippet->get_snippets()[0]['code'] );
         $this->assertEquals( 'context', $snippet->get_context() );
         $this->assertEquals( 'source', $snippet->get_source() );
         $this->assertEquals( array( 'tag1', 'tag2', 'tag3' ), $snippet->get_tags() );
