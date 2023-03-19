@@ -7,8 +7,8 @@ namespace Docsdangit\Backend\Handler;
 use Docsdangit\Backend\Service\PostDocsEntryRequestBodyConverter;
 use Docsdangit\Backend\Service\Repository;
 use Docsdangit\Backend\Service\RequestBodyConverter;
+use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Router\RouterInterface;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -23,6 +23,11 @@ class PostEntityHandlerFactory
 
         $repository = $container->get(Repository::class);
 
-        return new PostEntityHandler($converter, $repository);
+        return new PostEntityHandler(
+			$converter,
+			$repository,
+			$container->get(RouterInterface::class),
+	        $container->get(ServerUrlHelper::class),
+        );
     }
 }

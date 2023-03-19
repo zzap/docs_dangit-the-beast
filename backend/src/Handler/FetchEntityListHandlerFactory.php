@@ -11,7 +11,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 use function assert;
 
-class FetchEntityHandlerFactory
+class FetchEntityListHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
