@@ -35,9 +35,6 @@ final class DatabaseEntryToDocsEntry
 		$codeBlocks = new CodeBlocks();
 
 		$dbRow = json_decode($dbRow['object'], true);
-		foreach ($dbRow['code_snippet'] as $snippet) {
-			$codeBlocks = $codeBlocks->with(new CodeBlock($snippet['code'], $snippet['language']));
-		}
 
 		$commandTags = new CommandTags();
 		foreach ($dbRow['command_tags'] as $command) {
@@ -50,7 +47,7 @@ final class DatabaseEntryToDocsEntry
 		}
 
 		return new DocsEntry(
-			$codeBlocks,
+			new CodeBlock($dbRow['code_snippet'][0]['code'], $dbRow['code_snippet'][0]['language']),
 			new DateTimeImmutable($dbRow['parse_date']),
 			new Uri($dbRow['url']),
 			new CodeCreator($dbRow['code_creator']),

@@ -29,14 +29,16 @@ use function json_decode;
 final class PostDocsEntryRequestBodyConverter implements RequestBodyConverter
 {
 
-	public function convert(ServerRequestInterface $request) : Entity
+	public function convert(ServerRequestInterface $request) : array
 	{
+		$entities = [];
+
 		$data = $request->getBody()->getContents();
 		$data = json_decode($data, true);
 
-		$codeBlocks = new CodeBlocks();
-		foreach ($data['code_snippet'] as $snippet) {
-			$codeBlocks = $codeBlocks->with(new CodeBlock($snippet['code'], $snippet['language']));
+		$tags = new Tags();
+		foreach ($data['tags'] as $tag) {
+			$tags = $tags->with(new Tag($tag));
 		}
 
 		$commandTags = new CommandTags();
@@ -44,23 +46,22 @@ final class PostDocsEntryRequestBodyConverter implements RequestBodyConverter
 			$commandTags = $commandTags->with(new CommandTag($command));
 		}
 
-		$tags = new Tags();
-		foreach ($data['tags'] as $tag) {
-			$tags = $tags->with(new Tag($tag));
+		foreach ($data['code_snippet'] as $snippet) {
+			$entities[] = new DocsEntry(
+				new CodeBlock($snippet['code'], $snippet['language']),
+				new DateTimeImmutable($data['parse_date']),
+				new Uri($data['url']),
+				new CodeCreator($data['code_creator']),
+				new DateTimeImmutable($data['code_creation_datetime']),
+				new DocsSource($data['source']),
+				new DocsVersion($data['version']),
+				new DocsFunction($data['function']),
+				$commandTags,
+				$tags,
+				new Language($data['language'])
+			);
 		}
 
-		return new DocsEntry(
-			$codeBlocks,
-			new DateTimeImmutable($data['parse_date']),
-			new Uri($data['url']),
-			new CodeCreator($data['code_creator']),
-			new DateTimeImmutable($data['code_creation_datetime']),
-			new DocsSource($data['source']),
-			new DocsVersion($data['version']),
-			new DocsFunction($data['function']),
-			$commandTags,
-			$tags,
-			new Language($data['language'])
-		);
+		return $entities;
 	}
 }

@@ -6,5 +6,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 interface RequestBodyConverter
 {
-	public function convert(ServerRequestInterface $request): Entity;
+	/**
+	 * @return Entity[]
+	 */
+	public function convert(ServerRequestInterface $request): array;
 }
