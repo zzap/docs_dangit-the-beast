@@ -10,6 +10,21 @@ services:
         volumes:
             - ./elasticdata:/usr/share/elasticsearch/data
 
+    db:
+      image: mysql:8.0.21
+      ports:
+        - 3306:3306
+      command: [
+        '--default_authentication_plugin=mysql_native_password',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+      ]
+      volumes:
+        - db_data:/var/lib/mysql
+        - .docker/mysql:/docker-entrypoint-initdb.d
+      env_file:
+        - .env
+
     nginx:
         build:
             context: .docker/nginx
@@ -34,4 +49,7 @@ services:
             - 9000:9000
         links:
             - elastic:elastic
+            - db:db
 
+volumes:
+  db_data:
