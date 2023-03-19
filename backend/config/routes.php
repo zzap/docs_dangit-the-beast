@@ -41,5 +41,6 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->get('/', Docsdangit\Backend\Handler\HomePageHandler::class, 'home');
     $app->get('/api/ping', Docsdangit\Backend\Handler\PingHandler::class, 'api.ping');
     $app->post('/api/docs', Docsdangit\Backend\Handler\PostEntityHandler::class, 'api.entity.create');
-    $app->get('/api/docs', Docsdangit\Backend\Handler\FetchEntityHandler::class, 'api.entity.list');
+    $app->get('/api/docs', Docsdangit\Backend\Handler\FetchEntityListHandler::class, 'api.entity.list');
+    $app->get('/api/docs/{hash}', Docsdangit\Backend\Handler\FetchEntityHandler::class, 'api.entity.show');
 };

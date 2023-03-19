@@ -22,7 +22,7 @@ class WP_CLI implements Parser {
         $file = 'data/wpcli-commands.json';
         $raw = file_get_contents( $file );
         $json = json_decode( $raw );
-        $this->process_subcommands( $json->subcommands, 'https://developer.wordpress.org/cli/commands/' );
+        $this->process_subcommands( $json->subcommands, 'https://developer.wordpress.org/cli/commands/', [] );
     }
 
     public function get_source_version() {
@@ -33,27 +33,26 @@ class WP_CLI implements Parser {
 
     public function reset() {}
 
-    private function process_subcommands( $json, $path ) {
+    private function process_subcommands( $json, $path, $commands ) {
         foreach( $json as $item ) {
             $item_path = $path . $item->name . '/';
-            $snippet = $this->parse_snippet( $item, $item_path );
+            $new_commands = $commands;
+            $new_commands[] = $item->name;
+            $snippet = $this->parse_snippet( $item, $item_path, $new_commands );
 
-            if( count( $snippet->get_snippets() ) === 0 ) {
-                continue;
+            if( count( $snippet->get_snippets() ) > 0 ) {
+                $writer = new API_Writer( $snippet );
+                $writer->write();
             }
 
-            $writer = new API_Writer( $snippet );
-            $writer->write();
-            // $plainText = new Plaintext( $snippet, "dumps/wp-cli-{$item->name}.txt");
-            // $plainText->write();
             // subcommands
             if( isset( $item->subcommands ) ) {
-                $this->process_subcommands( $item->subcommands, $item_path );
-            }
+                $this->process_subcommands( $item->subcommands, $item_path, $new_commands );
+            } 
         }
     }
 
-    public function parse_snippet( $item, $path ) : Snippet {
+    private function parse_snippet( $item, $path, $commands ) {
         // parse code snippet
         $id = hash( 'sha256', $path );
         $long_desc = $item->longdesc;
@@ -67,8 +66,6 @@ class WP_CLI implements Parser {
             ];
         }
 
-        $command_tags = [];
-
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
             'id' => $id,
@@ -76,7 +73,7 @@ class WP_CLI implements Parser {
             'context' => '',
             'source' => 'wp-cli',
             'tags' => ['WordPress'],
-            'command_tags' => $command_tags,
+            'command_tags' => $commands,
             'code_language_tags' => ['bash'],
             'language' => 'en-US',
             'version' => $this->wp_cli_version,

@@ -29,15 +29,11 @@ class WordPress_Docs implements Parser {
             $json = json_decode( $raw, false );
             foreach( $json as $index => $item ) {
                 $snippet = $this->parse_snippet( $item );
-                if( count( $snippet->get_snippets() ) === 0 ) {
-                    continue;
+
+                if( count( $snippet->get_snippets() ) > 0 ) {
+                    $writer = new API_Writer( $snippet );
+                    $writer->write();
                 }
-
-                $writer = new API_Writer( $snippet );
-                $writer->write();
-
-                // $plainText = new Plaintext( $snippet, "dumps/{$item->id}.txt");
-                // $plainText->write();
             }
         }
     }
@@ -73,6 +69,12 @@ class WordPress_Docs implements Parser {
 
         // get command tags
         $command_tags = [];
+        include 'data/wp-functions.php';
+        foreach( $wp_functions as $fn ) {
+            if( str_contains( $item->content->rendered, $fn ) ) {
+                $command_tags[] = $fn;
+            }
+        }
 
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [

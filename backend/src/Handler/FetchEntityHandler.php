@@ -20,20 +20,8 @@ class FetchEntityHandler implements RequestHandlerInterface
 
 	public function handle(ServerRequestInterface $request) : ResponseInterface
 	{
-		$query = $request->getQueryParams();
+		$result = $this->repository->fetchSingle($request->getAttribute('hash'));
 
-		$search = null;
-		if (isset($query['search'])) {
-			$search = $query['search'];
-		}
-
-		$results = $this->repository->fetch($search, 15, 0);
-
-		$response = [];
-		foreach ($results as $result) {
-			$response[] = $this->serializer->serialize($result);
-		}
-
-		return new JsonResponse($response);
+		return new JsonResponse($this->serializer->serialize($result));
 	}
 }
