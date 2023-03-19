@@ -11,7 +11,11 @@ use Docsdangit\Data\Snippet;
 use Docsdangit\Data\Plaintext;
 
 class WP_CLI implements Parser {
-    public function __construct() {}
+    private $wp_cli_version;
+
+    public function __construct() {
+        $this->wp_cli_version = $this->get_source_version();
+    }
 
     public function parse() {
         $file = 'data/wpcli-commands.json';
@@ -67,7 +71,7 @@ class WP_CLI implements Parser {
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
             'language' => 'en-US',
-            'version' => $this->get_source_version(),
+            'version' => $this->wp_cli_version,
             'url' => $path,
             'creator' => '',
             'parse_date' => $now,
