@@ -46,8 +46,6 @@ class WordPress_Docs implements Parser {
         }
     }
 
-    public function reset() {}
-
     public function parse_snippet( $item ) : Snippet {
         // parse snippet
         $id = hash( 'sha256', $item->link );
