@@ -24,10 +24,10 @@ EOT);
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // $wp_docs = new WordPress_Docs();
-        // $wp_docs->parse();
-        // $wp_docs = new WP_CLI();
-        // $wp_docs->parse();
+        $wp_docs = new WordPress_Docs();
+        $wp_docs->parse();
+        $wp_docs = new WP_CLI();
+        $wp_docs->parse();
         $wp_docs = new PHP_Docs();
         $wp_docs->parse();
 
