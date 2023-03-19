@@ -29,9 +29,7 @@ class WordPress_Docs implements Parser {
         }
     }
 
-    public function reset() {}
-
-    private function parse_snippet( $item ) {
+    public function parse_snippet( $item ) : Snippet {
         // parse snippet
         $id = hash( 'sha256', $item->link );
         $pattern = "/<code .*>(.*?)<\/code>/s";
