@@ -28,10 +28,7 @@ class WP_Docs_Comments implements ParserInterface
 
     private function parse_snippet($snippet): Snippet
     {
-
-        print_r($snippet);
-        exit();
-        // parse code snippet
+        $path = $snippet['link'];
         $id = hash('sha256', $path);
         $long_desc = $snippet->longdesc;
         $pattern = "/## EXAMPLES(.*?)##/s";

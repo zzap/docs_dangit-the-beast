@@ -10,12 +10,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // import the Symfony Console Application
 use Docsdangit\Command\Ingest;
 use Docsdangit\Parsers\WP_Docs_Comments;
-use Docsdangit\Reader\Local_Json_Reader;
+use Docsdangit\Reader\WP_Docs_Reader;
 use Symfony\Component\Console\Application;
 
 $app = new Application();
 $app->add(new Ingest(
-    new Local_Json_Reader(),
+    new WP_Docs_Reader(
+        new Symfony\Component\HttpClient\CurlHttpClient()
+    ),
     new WP_Docs_Comments()
 ));
 
