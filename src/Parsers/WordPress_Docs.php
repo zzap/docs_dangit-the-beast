@@ -11,7 +11,11 @@ use Docsdangit\Data\Snippet;
 use Docsdangit\Data\Plaintext;
 
 class WordPress_Docs implements Parser {
-    public function __construct() {}
+    private $wp_version;
+
+    public function __construct() {
+        $this->wp_version = $this->get_source_version();
+    }
 
     public function parse() {
         $url = 'https://developer.wordpress.org/wp-json/wp/v2/comments?per_page=100&page=';
@@ -72,7 +76,7 @@ class WordPress_Docs implements Parser {
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
             'language' => 'en-US',
-            'version' => $this->get_source_version(),
+            'version' => $this->wp_version,
             'url' => $item->link,
             'creator' => $item->author_name,
             'parse_date' => $now,
