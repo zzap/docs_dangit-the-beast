@@ -21,7 +21,6 @@ class WordPress_Docs implements Parser {
             $raw = file_get_contents( $url . $i  );
             $json = json_decode( $raw );
             foreach( $json as $index => $item ) {
-                echo "Processing {$index} item...\n";
                 $snippet = $this->parse_snippet( $item );
                 $plainText = new Plaintext( $snippet, "dumps/{$item->id}.txt");
                 $plainText->write();
@@ -46,16 +45,27 @@ class WordPress_Docs implements Parser {
     public function parse_snippet( $item ) : Snippet {
         // parse snippet
         $id = hash( 'sha256', $item->link );
-        $pattern = "/<code .*>(.*?)<\/code>/s";
-        preg_match( $pattern, $item->content->rendered, $matches );
-        $code_snippet = count( $matches ) > 1 ? $matches[1] : '';
+        $pattern = '/<code[^>]*lang="([^"]*)"[^>]*>(.*?)<\/code>/s';
+        preg_match_all( $pattern, $item->content->rendered, $matches );
+        $code_snippets = [];
+        $language_tags = [];
+        if( count( $matches ) > 1 ) {
+            foreach( $matches[1] as $index => $match ) {
+                $code_snippets[] = [
+                    'language' => $match,
+                    'code' => $matches[2][$index]
+                ];
+                $language_tags[] = $match;
+            }
+        }
+
         // get command tags
         $command_tags = [];
 
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
             'id' => $id,
-            'snippet' => $code_snippet,
+            'snippet' => $code_snippets,
             'context' => $item->content->rendered,
             'source' => 'reference',
             'tags' => ['WordPress'],
