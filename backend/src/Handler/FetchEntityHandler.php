@@ -27,7 +27,17 @@ class FetchEntityHandler implements RequestHandlerInterface
 			$search = $query['search'];
 		}
 
-		$results = $this->repository->fetch($search, 15, 0);
+		$limit = 15;
+		if (isset($query['limit'])) {
+			$limit = (int) $query['limit'];
+		}
+
+		$offset = 0;
+		if (isset($query['offset'])) {
+			$offset = (int) $query['offset'];
+		}
+
+		$results = $this->repository->fetch($search, $limit, $offset);
 
 		$response = [];
 		foreach ($results as $result) {
