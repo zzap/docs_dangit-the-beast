@@ -20,6 +20,12 @@ class WP_CLI implements Parser {
         $this->process_subcommands( $json->subcommands, 'https://developer.wordpress.org/cli/commands/' );
     }
 
+    public function get_source_version() {
+        $file = 'data/wpcli-version.txt';
+        $raw = file_get_contents( $file );
+        return str_replace("WP-CLI ", "", $raw);
+    }
+
     public function reset() {}
 
     private function process_subcommands( $json, $path ) {
@@ -55,7 +61,7 @@ class WP_CLI implements Parser {
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
             'language' => 'english',
-            'version' => 1,
+            'version' => $this->get_source_version(),
             'url' => $path,
             'creator' => '',
             'parse_date' => $now,
