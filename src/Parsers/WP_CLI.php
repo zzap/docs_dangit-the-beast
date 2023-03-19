@@ -69,7 +69,7 @@ class WP_CLI implements Parser {
             'source' => 'wp-cli',
             'tags' => ['WordPress'],
             'command_tags' => $command_tags,
-            'code_language_tags' => ['php'],
+            'code_language_tags' => ['bash'],
             'language' => 'en-US',
             'version' => $this->wp_cli_version,
             'url' => $path,
