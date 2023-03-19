@@ -5,6 +5,6 @@ deploy
 build
 phpunit.xml
 .DS_Store
-dumps
+dumps/*
 .idea
 /tools
