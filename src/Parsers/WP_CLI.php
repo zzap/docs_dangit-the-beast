@@ -9,6 +9,7 @@ namespace Docsdangit\Parsers;
 use Docsdangit\Interfaces\Parser;
 use Docsdangit\Data\Snippet;
 use Docsdangit\Data\Plaintext;
+use Docsdangit\Data\API_Writer;
 
 class WP_CLI implements Parser {
     private $wp_cli_version;
@@ -36,8 +37,15 @@ class WP_CLI implements Parser {
         foreach( $json as $item ) {
             $item_path = $path . $item->name . '/';
             $snippet = $this->parse_snippet( $item, $item_path );
-            $plainText = new Plaintext( $snippet, "dumps/wp-cli-{$item->name}.txt");
-            $plainText->write();
+
+            if( count( $snippet->get_snippets() ) === 0 ) {
+                continue;
+            }
+
+            $writer = new API_Writer( $snippet );
+            $writer->write();
+            // $plainText = new Plaintext( $snippet, "dumps/wp-cli-{$item->name}.txt");
+            // $plainText->write();
             // subcommands
             if( isset( $item->subcommands ) ) {
                 $this->process_subcommands( $item->subcommands, $item_path );
@@ -45,7 +53,7 @@ class WP_CLI implements Parser {
         }
     }
 
-    private function parse_snippet( $item, $path ) {
+    public function parse_snippet( $item, $path ) : Snippet {
         // parse code snippet
         $id = hash( 'sha256', $path );
         $long_desc = $item->longdesc;

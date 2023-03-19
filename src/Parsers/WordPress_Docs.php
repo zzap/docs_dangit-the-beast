@@ -9,6 +9,7 @@ namespace Docsdangit\Parsers;
 use Docsdangit\Interfaces\Parser;
 use Docsdangit\Data\Snippet;
 use Docsdangit\Data\Plaintext;
+use Docsdangit\Data\API_Writer;
 
 class WordPress_Docs implements Parser {
     private $wp_version;
@@ -28,8 +29,15 @@ class WordPress_Docs implements Parser {
             $json = json_decode( $raw, false );
             foreach( $json as $index => $item ) {
                 $snippet = $this->parse_snippet( $item );
-                $plainText = new Plaintext( $snippet, "dumps/{$item->id}.txt");
-                $plainText->write();
+                if( count( $snippet->get_snippets() ) === 0 ) {
+                    continue;
+                }
+
+                $writer = new API_Writer( $snippet );
+                $writer->write();
+
+                // $plainText = new Plaintext( $snippet, "dumps/{$item->id}.txt");
+                // $plainText->write();
             }
         }
     }
@@ -69,7 +77,7 @@ class WordPress_Docs implements Parser {
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
             'id' => $id,
-            'snippet' => $code_snippets,
+            'snippets' => $code_snippets,
             'context' => $item->content->rendered,
             'source' => 'reference',
             'tags' => ['WordPress'],
