@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Docsdangit\Backend\Handler;
 use Docsdangit\Backend\Repository;
+use Docsdangit\Backend\Serialize;
 use Docsdangit\Backend\Service;
 
 return [
@@ -21,11 +22,14 @@ return [
         // class name.
         'invokables' => [
 			Service\PostDocsEntryRequestBodyConverter::class => Service\PostDocsEntryRequestBodyConverter::class,
-            // Fully\Qualified\InterfaceName::class => Fully\Qualified\ClassName::class,
+	        Serialize\DatabaseEntryToDocsEntry::class => Serialize\DatabaseEntryToDocsEntry::class,
+            Serialize\DocsEntryToArray::class => Serialize\DocsEntryToArray::class,
+	        // Fully\Qualified\InterfaceName::class => Fully\Qualified\ClassName::class,
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories' => [
 			Handler\PostEntityHandler::class => Handler\PostEntityHandlerFactory::class,
+	        Handler\FetchEntityHandler::class => Handler\FetchEntityHandlerFactory::class,
 	        Service\Repository::class => Repository\MySQLFactory::class
         ],
     ],

@@ -7,6 +7,7 @@ namespace Docsdangit\Backend\Repository;
 use DateTimeZone;
 use Docsdangit\Backend\Entity\CodeBlock;
 use Docsdangit\Backend\Entity\DocsEntry;
+use Docsdangit\Backend\Serialize\DatabaseEntryToDocsEntry;
 use Docsdangit\Backend\Service\Entity;
 use Docsdangit\Backend\Service\Repository as RepositoryInterface;
 use PDO;
@@ -16,6 +17,7 @@ final class MySQL implements RepositoryInterface
 {
 	public function __construct(
 		private PDO $dbConnection,
+		private DatabaseEntryToDocsEntry $dbToDocs,
 	) {}
 
 	public function store(Entity $entity) : void
@@ -51,18 +53,52 @@ SQL;
 			'url' => (string) $entity->url,
 			'code_creator' => (string) $entity->codeCreator,
 			'code_creation_datetime' => $entity->codeCreationDateTime->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s'),
-			'source' => $entity->docsSource,
-			'version' => $entity->docsVersion,
+			'source' => (string) $entity->docsSource,
+			'version' => (string) $entity->docsVersion,
 			'command_tags' => $commandTags,
 			'tags' => $tags,
-			'language' => (string) $entity->language
+			'language' => (string) $entity->language,
+			'function' => (string) $entity->docsFunction,
 		];
+
+		/** @var CodeBlock $codeBlock */
+		foreach ($entity->codeBlocks as $codeBlock) {
+			$object['code_snippet'][] = [
+				'code' => $codeBlock->code,
+				'language' => $codeBlock->language,
+			];
+		}
 
 		$query = $this->dbConnection->prepare($query);
 		$query->execute([
 			'hash' => hash('sha512', (string) $entity->url),
 			'searchcontent' => $codecontent,
-			'object' => json_encode($object)
+			'object' => json_encode($object),
 		]);
+	}
+
+	public function fetch(string|null $search, int $limit, int $offset): array
+	{
+		$query = 'SELECT * FROM docentries WHERE MATCH(searchcontent) AGAINST (:search IN NATURAL LANGUAGE MODE) LIMIT %1$d, %2$d';
+		$params = [
+			'search' => $search,
+		];
+
+
+		if ($search === null) {
+			$query = 'SELECT * FROM docentries LIMIT %1$d, %2$d';
+			unset($params['search']);
+		}
+
+		$query = $this->dbConnection->prepare(sprintf($query, $offset, $limit));
+
+		$result = $query->execute($params);
+
+		$resultList = [];
+		foreach ($query->fetchAll() as $entry) {
+			$resultList[] = $this->dbToDocs->unserialize($entry);
+		}
+
+		return $resultList;
 	}
 }
