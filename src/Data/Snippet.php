@@ -1,6 +1,6 @@
 <?php
 /**
- * Snippet class
+ * Snippets class
  *
  * @package Docsdangit
  */
@@ -8,7 +8,7 @@ namespace Docsdangit\Data;
 
 class Snippet {
     private string $id;
-    private array $snippet;
+    private array $snippets;
     private string $context;
     private string $source;
     private array $tags;
@@ -23,10 +23,10 @@ class Snippet {
     private string $updated;
 
     /**
-     * Snippet constructor.
+     * Snippets constructor.
      *
      * @param string $id
-     * @param array $snippet
+     * @param array $snippets
      * @param string $context
      * @param string $source
      * @param array $tags
@@ -42,7 +42,7 @@ class Snippet {
      */
     public function __construct(
         string $id,
-        array $snippet,
+        array $snippets,
         string $context,
         string $source,
         array $tags,
@@ -57,7 +57,7 @@ class Snippet {
         string $updated
     ) {
         $this->id = $id;
-        $this->snippet = $snippet;
+        $this->snippets = $snippets;
         $this->context = $context;
         $this->source = $source;
         $this->tags = $tags;
@@ -76,8 +76,8 @@ class Snippet {
         return $this->id;
     }
 
-    public function get_snippet() : array {
-        return $this->snippet;
+    public function get_snippets() : array {
+        return $this->snippets;
     }
 
     public function get_context() : string {
