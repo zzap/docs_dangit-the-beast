@@ -29,6 +29,18 @@ class WordPress_Docs implements Parser {
         }
     }
 
+    public function get_source_version() {
+        $url = 'https://api.wordpress.org/core/version-check/1.7/';
+        $raw = file_get_contents( $url );
+        $json = json_decode( $raw );
+        // There's also $json->offers[0]->version.
+        if ( is_object( $json ) && isset( $json->offers[0] ) ) {
+            return $json->offers[0]->current;
+        } else {
+            return null;
+        }
+    }
+
     public function reset() {}
 
     private function parse_snippet( $item ) {
@@ -37,7 +49,6 @@ class WordPress_Docs implements Parser {
         $pattern = "/<code .*>(.*?)<\/code>/s";
         preg_match( $pattern, $item->content->rendered, $matches );
         $code_snippet = count( $matches ) > 1 ? $matches[1] : '';
-
         // get command tags
         $command_tags = [];
 
@@ -51,14 +62,14 @@ class WordPress_Docs implements Parser {
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
             'language' => 'english',
-            'version' => 1,
+            'version' => $this->get_source_version(),
             'url' => $item->link,
             'creator' => $item->author_name,
             'parse_date' => $now,
             'code_creation_date' => $item->date,
             'updated' => $now
         ];
-        
+
         $snippet = new Snippet( ...$snippet_data );
         return $snippet;
     }
