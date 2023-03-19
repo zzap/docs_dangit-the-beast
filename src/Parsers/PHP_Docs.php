@@ -12,7 +12,12 @@ use Docsdangit\Data\API_Writer;
 use Symfony\Component\HttpClient\HttpClient;
 
 class PHP_Docs implements Parser {
-    public function __construct() {}
+    private $gh_token;
+
+    public function __construct() {
+        $config = parse_ini_file('config/config.ini');
+        $this->gh_token = $config['gh_token'];
+    }
 
     public function reset() {}
 
@@ -20,7 +25,7 @@ class PHP_Docs implements Parser {
         $reference_url = 'https://api.github.com/repos/php/doc-en/git/trees/7ce1ebaf86b8360697acebb3e548d364c0c222bc';
         $client = HttpClient::create();
         $response = $client->request('GET', $reference_url, [
-            'auth_bearer' => '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'
+            'auth_bearer' => $this->gh_token
         ]);
         $content = $response->getContent();
         $dirs = json_decode( $content );
@@ -35,7 +40,7 @@ class PHP_Docs implements Parser {
     public function parse_namespace( $url, $namespace ) {
         $client = HttpClient::create();
         $response = $client->request('GET', $url, [
-            'auth_bearer' => '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'
+            'auth_bearer' => $this->gh_token
         ]);
         $content = $response->getContent();
         $dirs = json_decode( $content );
@@ -51,7 +56,7 @@ class PHP_Docs implements Parser {
     public function parse_functions( $url, $namespace ) {
         $client = HttpClient::create();
         $response = $client->request('GET', $url, [
-            'auth_bearer' => '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'
+            'auth_bearer' => $this->gh_token
         ]);
         $content = $response->getContent();
         $dirs = json_decode( $content );
