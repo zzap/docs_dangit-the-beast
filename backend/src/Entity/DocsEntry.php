@@ -11,7 +11,7 @@ use Psr\Http\Message\UriInterface;
 final class DocsEntry implements Entity
 {
 	public function __construct(
-		public readonly CodeBlocks $codeBlocks,
+		public readonly CodeBlock $codeBlock,
 		public readonly DateTimeImmutable $parseDate,
 		public readonly UriInterface $url,
 		public readonly CodeCreator $codeCreator,

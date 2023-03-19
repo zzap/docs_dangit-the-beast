@@ -11,6 +11,7 @@ use Docsdangit\Backend\Serialize\DatabaseEntryToDocsEntry;
 use Docsdangit\Backend\Service\Entity;
 use Docsdangit\Backend\Service\Repository as RepositoryInterface;
 use PDO;
+use function hash;
 use function json_encode;
 use function sprintf;
 
@@ -21,22 +22,24 @@ final class MySQL implements RepositoryInterface
 		private DatabaseEntryToDocsEntry $dbToDocs,
 	) {}
 
+	public function clean(string $url): void
+	{
+		$hash = hash('sha512', $url);
+		$query = $this->dbConnection->prepare('DELETE FROM docentries WHERE entryhash = :hash');
+		$query->execute([
+			'hash' => hash('sha512', $hash),
+		]);
+	}
+
 	public function store(Entity $entity) : void
 	{
 		assert($entity instanceof DocsEntry);
-		$query = <<<'SQL'
-INSERT INTO docentries (id, searchcontent, object)
-VALUES (:hash, :searchcontent, :object)
-ON DUPLICATE KEY UPDATE
-    searchcontent = :searchcontent,
-    object = :object;
-SQL;
 
-		$codecontent = '';
-		/** @var CodeBlock $block */
-		foreach ($entity->codeBlocks as $block) {
-			$codecontent .= $block->code;
-		}
+		$query = <<<'SQL'
+INSERT INTO docentries (entryhash, searchcontent, object)
+VALUES (:hash, :searchcontent, :object)
+SQL;
+		$codecontent = $entity->codeBlock->code;
 
 		$commandTags = [];
 		foreach ($entity->commandTags as $tag) {
@@ -49,7 +52,12 @@ SQL;
 		}
 
 		$object = [
-			'code_snippet' => [],
+			'code_snippet' => [[
+				'code' => $entity->codeBlock->code,
+				'language' => $entity->codeBlock->language,
+			]],
+			'code' => $entity->codeBlock->code,
+			'code_language' => $entity->codeBlock->language,
 			'parse_date' => $entity->parseDate->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s'),
 			'url' => (string) $entity->url,
 			'code_creator' => (string) $entity->codeCreator,
@@ -61,14 +69,6 @@ SQL;
 			'language' => (string) $entity->language,
 			'function' => (string) $entity->docsFunction,
 		];
-
-		/** @var CodeBlock $codeBlock */
-		foreach ($entity->codeBlocks as $codeBlock) {
-			$object['code_snippet'][] = [
-				'code' => $codeBlock->code,
-				'language' => $codeBlock->language,
-			];
-		}
 
 		$query = $this->dbConnection->prepare($query);
 		$query->execute([

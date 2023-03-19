@@ -26,9 +26,11 @@ final class PostEntityHandler implements RequestHandlerInterface
 	public function handle(ServerRequestInterface $request) : ResponseInterface
 	{
 		/** @var DocsEntry $entity */
-		$entity = $this->requestBodyConverter->convert($request);
+		$entities = $this->requestBodyConverter->convert($request);
 
-		$this->repository->store($entity);
+		foreach ($entities as $entity) {
+			$this->repository->store($entity);
+		}
 
 		$route = $this->router->generateUri(
 			'api.entity.show',
