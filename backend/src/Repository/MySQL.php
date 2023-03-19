@@ -12,6 +12,7 @@ use Docsdangit\Backend\Service\Entity;
 use Docsdangit\Backend\Service\Repository as RepositoryInterface;
 use PDO;
 use function json_encode;
+use function sprintf;
 
 final class MySQL implements RepositoryInterface
 {
@@ -101,4 +102,14 @@ SQL;
 
 		return $resultList;
 	}
+
+	public function fetchSingle(string $hash): Entity
+	{
+		$query = $this->dbConnection->prepare( 'SELECT * FROM docentries WHERE id = :hash');
+
+		$query->execute(['hash' => $hash]);
+
+		return $this->dbToDocs->unserialize($query->fetch());
+	}
+
 }

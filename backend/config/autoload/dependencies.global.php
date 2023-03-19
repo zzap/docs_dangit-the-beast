@@ -29,6 +29,7 @@ return [
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories' => [
 			Handler\PostEntityHandler::class => Handler\PostEntityHandlerFactory::class,
+	        Handler\FetchEntityListHandler::class => Handler\FetchEntityListHandlerFactory::class,
 	        Handler\FetchEntityHandler::class => Handler\FetchEntityHandlerFactory::class,
 	        Service\Repository::class => Repository\MySQLFactory::class
         ],
