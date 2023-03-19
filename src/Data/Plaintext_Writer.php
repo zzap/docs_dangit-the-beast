@@ -8,7 +8,7 @@ namespace Docsdangit\Data;
 
 use Docsdangit\Interfaces\Writer;
 
-class Plaintext implements Writer {
+class Plaintext_Writer implements Writer {
     protected Snippet $snippet;
 
     protected string $filename;
