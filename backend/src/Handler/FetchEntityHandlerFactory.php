@@ -19,6 +19,6 @@ class FetchEntityHandlerFactory
 
         $repository = $container->get(Repository::class);
 
-        return new FetchEntityListHandler($repository, $docsEntryToArray);
+        return new FetchEntityHandler($repository, $docsEntryToArray);
     }
 }
