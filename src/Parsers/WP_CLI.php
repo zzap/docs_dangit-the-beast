@@ -11,13 +11,23 @@ use Docsdangit\Data\Snippet;
 use Docsdangit\Data\Plaintext;
 
 class WP_CLI implements Parser {
-    public function __construct() {}
+    private $wp_cli_version;
+
+    public function __construct() {
+        $this->wp_cli_version = $this->get_source_version();
+    }
 
     public function parse() {
         $file = 'data/wpcli-commands.json';
         $raw = file_get_contents( $file );
         $json = json_decode( $raw );
         $this->process_subcommands( $json->subcommands, 'https://developer.wordpress.org/cli/commands/' );
+    }
+
+    public function get_source_version() {
+        $file = 'data/wpcli-version.txt';
+        $raw = file_get_contents( $file );
+        return str_replace("WP-CLI ", "", $raw);
     }
 
     public function reset() {}
@@ -59,9 +69,9 @@ class WP_CLI implements Parser {
             'source' => 'wp-cli',
             'tags' => ['WordPress'],
             'command_tags' => $command_tags,
-            'code_language_tags' => ['bash'],
-            'language' => 'en',
-            'version' => 1,
+            'code_language_tags' => ['php'],
+            'language' => 'en-US',
+            'version' => $this->wp_cli_version,
             'url' => $path,
             'creator' => '',
             'parse_date' => $now,
