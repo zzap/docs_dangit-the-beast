@@ -33,6 +33,7 @@ class WordPress_Docs implements Parser {
 
     private function parse_snippet( $item ) {
         // parse snippet
+        $id = hash( 'sha256', $item->link );
         $pattern = "/<code .*>(.*?)<\/code>/s";
         preg_match( $pattern, $item->content->rendered, $matches );
         $code_snippet = count( $matches ) > 1 ? $matches[1] : '';
@@ -42,6 +43,7 @@ class WordPress_Docs implements Parser {
 
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
+            'id' => $id,
             'snippet' => $code_snippet,
             'context' => $item->content->rendered,
             'source' => 'reference',
@@ -56,6 +58,7 @@ class WordPress_Docs implements Parser {
             'code_creation_date' => $item->date,
             'updated' => $now
         ];
+        
         $snippet = new Snippet( ...$snippet_data );
         return $snippet;
     }

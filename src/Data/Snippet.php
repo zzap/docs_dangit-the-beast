@@ -7,6 +7,7 @@
 namespace Docsdangit\Data;
 
 class Snippet {
+    private string $id;
     private string $snippet;
     private string $context;
     private string $source;
@@ -39,6 +40,7 @@ class Snippet {
      * @param string $updated
      */
     public function __construct(
+        string $id,
         string $snippet,
         string $context,
         string $source,
@@ -53,6 +55,7 @@ class Snippet {
         string $code_creation_date,
         string $updated
     ) {
+        $this->id = $id;
         $this->snippet = $snippet;
         $this->context = $context;
         $this->source = $source;
@@ -66,6 +69,10 @@ class Snippet {
         $this->parse_date = $parse_date;
         $this->code_creation_date = $code_creation_date;
         $this->updated = $updated;
+    }
+
+    public function get_id() : string {
+        return $this->id;
     }
 
     public function get_snippet() : string {

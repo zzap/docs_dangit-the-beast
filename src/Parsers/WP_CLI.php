@@ -37,6 +37,7 @@ class WP_CLI implements Parser {
 
     private function parse_snippet( $item, $path ) {
         // parse code snippet
+        $id = hash( 'sha256', $path );
         $long_desc = $item->longdesc;
         $pattern = "/## EXAMPLES(.*?)##/s";
         preg_match( $pattern, $long_desc, $matches );
@@ -46,6 +47,7 @@ class WP_CLI implements Parser {
 
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
+            'id' => $id,
             'snippet' => $code_snippet,
             'context' => '',
             'source' => 'wp-cli',
