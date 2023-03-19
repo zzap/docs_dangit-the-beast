@@ -65,6 +65,12 @@ class WordPress_Docs implements Parser {
 
         // get command tags
         $command_tags = [];
+        include 'data/wp-functions.php';
+        foreach( $wp_functions as $fn ) {
+            if( str_contains( $item->content->rendered, $fn ) ) {
+                $command_tags[] = $fn;
+            }
+        }
 
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
