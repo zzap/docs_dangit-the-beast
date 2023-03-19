@@ -13,13 +13,15 @@ use Docsdangit\Data\Plaintext;
 class WordPress_Docs implements Parser {
     public function __construct() {}
 
+    public function reset() {}
+
     public function parse() {
         $url = 'https://developer.wordpress.org/wp-json/wp/v2/comments?per_page=100&page=';
         $headers = get_headers( $url . '1', true );
         $total_pages = $headers['X-WP-TotalPages'] ?? 41;
         for( $i = 1; $i <= $total_pages; $i += 1 ) {
             $raw = file_get_contents( $url . $i  );
-            $json = json_decode( $raw );
+            $json = json_decode( $raw, false );
             foreach( $json as $index => $item ) {
                 $snippet = $this->parse_snippet( $item );
                 $plainText = new Plaintext( $snippet, "dumps/{$item->id}.txt");
