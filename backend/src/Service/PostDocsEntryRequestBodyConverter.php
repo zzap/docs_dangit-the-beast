@@ -55,7 +55,7 @@ final class PostDocsEntryRequestBodyConverter implements RequestBodyConverter
 				new DateTimeImmutable($data['code_creation_datetime']),
 				new DocsSource($data['source']),
 				new DocsVersion($data['version']),
-				new DocsFunction($data['function']),
+				new DocsFunction($data['title'] ?? $data['function'] ?? ''),
 				$commandTags,
 				$tags,
 				new Language($data['language'])
