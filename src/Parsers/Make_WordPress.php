@@ -35,6 +35,7 @@ class Make_WordPress implements Parser {
     }
 
     public function parse_snippet( $item ) : Snippet {
+        $id = hash( 'sha256', $item->link );
         // parse snippet
         $pattern = '/<pre[^>]*>(.*?)<\/pre>/s';
         preg_match_all( $pattern, $item->content->rendered, $matches );
@@ -60,16 +61,17 @@ class Make_WordPress implements Parser {
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
             'id' => $id,
+            'title' => $item->title->rendered,
             'snippets' => $code_snippets,
             'context' => $item->content->rendered,
-            'source' => 'reference',
+            'source' => 'wordpress_dev_reference',
             'tags' => ['WordPress'],
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
             'language' => 'en-US',
             'version' => '',
             'url' => $item->link,
-            'creator' => $item->author_name,
+            'creator' => '',
             'parse_date' => $now,
             'code_creation_date' => $item->date,
             'updated' => $now

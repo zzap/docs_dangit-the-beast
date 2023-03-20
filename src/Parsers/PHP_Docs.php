@@ -64,8 +64,10 @@ class PHP_Docs implements Parser {
             if( 'blob' === $dir->type ) {
                 echo $dir->path . "\n";
                 $snippet = $this->parse_snippet( $dir->path, $namespace );
-                $writer = new API_Writer( $snippet );
-                $writer->write();
+                if( count( $snippet->get_snippets() ) > 0 ) {
+                    $writer = new API_Writer( $snippet );
+                    $writer->write();
+                }
             }
         }
     }

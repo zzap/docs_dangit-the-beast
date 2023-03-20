@@ -38,16 +38,16 @@ class API_Writer implements Writer {
         }
 
         $item = array(
+            'title' => $this->snippet->get_title(),
             'code_snippet' => $snippets,
-            'tags' => array(),
-            'command_tags' => array(),
+            'tags' => $this->snippet->get_tags(),
+            'command_tags' => $this->snippet->get_command_tags(),
             'parse_date' => $this->snippet->get_parse_date(),
             'url' => $this->snippet->get_url(),
             'code_creator' => $this->snippet->get_creator(),
             'code_creation_datetime' => $this->snippet->get_code_creation_date(),
             'source' => $this->snippet->get_source(),
             'version' => $this->snippet->get_version(),
-            'function' => '',
             'language' => $this->snippet->get_language(),
         );
 
