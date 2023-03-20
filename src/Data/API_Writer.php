@@ -10,14 +10,14 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Docsdangit\Interfaces\Writer;
 
 class API_Writer implements Writer {
-    const API_URL = 'https://heigl.docs-dang.it:8443/api/docs';
+    const API_URL = 'https://heigl.docs-dang.it/api/docs';
 
     protected Snippet $snippet;
     protected HttpClientInterface $client;
 
     /**
      * API Writer constructor.
-     * 
+     *
      * @param Snippet $snippet
      */
     public function __construct( Snippet $snippet ) {
@@ -52,7 +52,7 @@ class API_Writer implements Writer {
         );
 
         $url = $this->snippet->get_url();
-        
+
         $item = json_encode( $item );
 
         $response = $this->client->request(
