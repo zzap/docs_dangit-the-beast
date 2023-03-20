@@ -23,7 +23,7 @@ final class DocsEntryToArray
 			'code_creation_datetime' => (string) $entry->codeCreationDateTime->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s'),
 			'source' => (string) $entry->docsSource,
 			'version' => (string) $entry->docsVersion,
-			'function' => (string) $entry->docsFunction,
+			'title' => (string) $entry->docsFunction,
 			'language' => (string) $entry->language,
         ];
 
