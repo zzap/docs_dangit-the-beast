@@ -78,18 +78,42 @@ SQL;
 		]);
 	}
 
-	public function fetch(string|null $search, int $limit, int $offset): array
+	public function fetch(string|null $search, int $limit, int $offset, array $filters): array
 	{
-		$query = 'SELECT *, MATCH(searchcontent) AGAINST (:search IN BOOLEAN MODE) as score FROM docentries WHERE MATCH(searchcontent) AGAINST (:search IN BOOLEAN MODE) ORDER BY score DESC LIMIT %1$d, %2$d';
+		$query = 'SELECT *, MATCH(searchcontent) AGAINST (:search IN BOOLEAN MODE) as score FROM docentries';
+		$filterQuery = ['MATCH(searchcontent) AGAINST (:search IN BOOLEAN MODE)'];
 		$params = [
 			'search' => $search . '*',
 		];
 
 
 		if ($search === null) {
-			$query = 'SELECT * FROM docentries LIMIT %1$d, %2$d';
+			$query = 'SELECT *, 1 as score FROM docentries';
 			unset($params['search']);
+			$filterQuery = [];
 		}
+
+		if ($filters !== []) {
+			if (isset($filters['tag'])) {
+				foreach ($filters['tag'] as $tag) {
+					$filterQuery[] = '"' . $tag . '" MEMBER OF(object->>\'$.tags\')';
+				}
+			}
+			if (isset($filters['command'])) {
+				foreach ($filters['command'] as $tag) {
+					$filterQuery[] = '"' . $tag . '" MEMBER OF(object->>\'$.command_tags\')';
+				}
+			}
+			if (isset($filters['function'])) {
+				$filterQuery[] = 'object->>\'$.function\' = "' . $filters['function'] . '"';
+			}
+		}
+
+		if ($filterQuery !== []) {
+			$query .= ' WHERE ' . implode(' AND ', $filterQuery);
+		}
+
+		$query .= ' ORDER BY score DESC LIMIT %1$d, %2$d';
 
 		$query = $this->dbConnection->prepare(sprintf($query, $offset, $limit));
 

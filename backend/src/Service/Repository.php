@@ -6,7 +6,7 @@ interface Repository
 {
 	public function store(Entity $entity): void;
 
-	public function fetch(string|null $search, int $limit, int $offset): array;
+	public function fetch(string|null $search, int $limit, int $offset, array $filters): array;
 
 	public function fetchSingle(string $hash): Entity;
 
