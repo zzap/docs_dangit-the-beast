@@ -36,17 +36,15 @@ class Make_WordPress implements Parser {
 
     public function parse_snippet( $item ) : Snippet {
         // parse snippet
-        $pattern = '/<code[^>]*lang="([^"]*)"[^>]*>(.*?)<\/code>/s';
+        $pattern = '/<pre[^>]*>(.*?)<\/pre>/s';
         preg_match_all( $pattern, $item->content->rendered, $matches );
         $code_snippets = [];
-        $language_tags = [];
         if( count( $matches ) > 1 ) {
-            foreach( $matches[1] as $index => $match ) {
+            foreach( $matches[1] as $match ) {
                 $code_snippets[] = [
-                    'language' => $match,
-                    'code' => $matches[2][$index]
+                    'language' => 'php',
+                    'code' => $match
                 ];
-                $language_tags[] = $match;
             }
         }
 
@@ -69,7 +67,7 @@ class Make_WordPress implements Parser {
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
             'language' => 'en-US',
-            'version' => $this->wp_version,
+            'version' => '',
             'url' => $item->link,
             'creator' => $item->author_name,
             'parse_date' => $now,
