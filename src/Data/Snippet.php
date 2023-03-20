@@ -1,11 +1,16 @@
 <?php
 /**
- * Snippets class
+ * Snippets Entity
  *
  * @package Docsdangit
  */
 namespace Docsdangit\Data;
 
+/**
+ * Snippet class
+ *
+ * Represent a snippet item.
+ */
 class Snippet {
     private string $id;
     private array $snippets;

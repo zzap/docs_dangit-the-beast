@@ -1,4 +1,10 @@
 <?php
+/**
+ * Ingest Command
+ *
+ * @package Docsdangit
+ */
+
 namespace Docsdangit\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -8,8 +14,14 @@ use Docsdangit\Parsers\WordPress_Docs;
 use Docsdangit\Parsers\WP_CLI;
 use Docsdangit\Parsers\PHP_Docs;
 
+/**
+ * Ingest Class
+ */
 class Ingest extends Command
 {
+    /**
+     * Command configuration
+     */
     protected function configure()
     {
         $this->setName('ingest')
@@ -22,6 +34,13 @@ Usage:
 EOT);
     }
 
+    /**
+     * Command execution
+     *
+     * @param InputInterface $input Input Interface.
+     * @param OutputInterface $output Output Interface.
+     * @return Symfony\Component\Console\Command\Command
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $wp_docs = new WordPress_Docs();
