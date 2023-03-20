@@ -13,7 +13,7 @@ final class DocsEntryToArray
 	{
 		$content = [
 			'code_snippet' => [],
-			'code' => $entry->codeBlock->code,
+			'code' => trim($entry->codeBlock->code),
 			'code_language' => $entry->codeBlock->language,
 			'command_tags' => [],
 			'tags' => [],
@@ -28,7 +28,7 @@ final class DocsEntryToArray
         ];
 
 		$content['code_snippet'][] = [
-			'code' => $entry->codeBlock->code,
+			'code' => trim($entry->codeBlock->code),
 			'language' => $entry->codeBlock->language,
 		];
 

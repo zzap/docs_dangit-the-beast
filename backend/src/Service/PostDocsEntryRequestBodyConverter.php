@@ -48,7 +48,7 @@ final class PostDocsEntryRequestBodyConverter implements RequestBodyConverter
 
 		foreach ($data['code_snippet'] as $snippet) {
 			$entities[] = new DocsEntry(
-				new CodeBlock($snippet['code'], $snippet['language']),
+				new CodeBlock(trim($snippet['code']), $snippet['language']),
 				new DateTimeImmutable($data['parse_date']),
 				new Uri($data['url']),
 				new CodeCreator($data['code_creator']),
