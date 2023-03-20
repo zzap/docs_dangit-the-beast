@@ -27,11 +27,6 @@ class FetchEntityListHandler implements RequestHandlerInterface
 			$search = $query['search'];
 		}
 
-		$search = null;
-		if (isset($query['search'])) {
-			$search = $query['search'];
-		}
-
 		$limit = 15;
 		if (isset($query['limit'])) {
 			$limit = (int) $query['limit'];
@@ -42,7 +37,25 @@ class FetchEntityListHandler implements RequestHandlerInterface
 			$offset = (int) $query['offset'];
 		}
 
-		$results = $this->repository->fetch($search, $limit, $offset);
+		$filters = [];
+
+		if (isset($query['source_filter'])) {
+			$filters['source'] = (array) $query['source_filter'];
+		}
+
+		if (isset($query['tag_filter'])) {
+			$filters['tag'] = (array) $query['tag_filter'];
+		}
+
+		if (isset($query['title'])) {
+			$filters['function'] = $query['title'];
+		}
+
+		if (isset($query['command_filter'])) {
+			$filters['command'] = (array) $query['command_filter'];
+		}
+
+		$results = $this->repository->fetch($search, $limit, $offset, $filters);
 
 		$response = [];
 		foreach ($results as $result) {
