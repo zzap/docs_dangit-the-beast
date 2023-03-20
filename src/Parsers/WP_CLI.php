@@ -48,7 +48,7 @@ class WP_CLI implements Parser {
             // subcommands
             if( isset( $item->subcommands ) ) {
                 $this->process_subcommands( $item->subcommands, $item_path, $new_commands );
-            } 
+            }
         }
     }
 
@@ -69,7 +69,7 @@ class WP_CLI implements Parser {
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
             'id' => $id,
-            'snippet' => $code_snippets,
+            'snippets' => $code_snippets,
             'context' => '',
             'source' => 'wp-cli',
             'tags' => ['WordPress'],
