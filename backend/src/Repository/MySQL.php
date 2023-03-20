@@ -80,9 +80,9 @@ SQL;
 
 	public function fetch(string|null $search, int $limit, int $offset): array
 	{
-		$query = 'SELECT * FROM docentries WHERE MATCH(searchcontent) AGAINST (:search IN NATURAL LANGUAGE MODE) LIMIT %1$d, %2$d';
+		$query = 'SELECT *, MATCH(searchcontent) AGAINST (:search IN NATURAL LANGUAGE MODE) as score FROM docentries WHERE MATCH(searchcontent) AGAINST (:search IN NATURAL LANGUAGE MODE) ORDER BY score DESC LIMIT %1$d, %2$d';
 		$params = [
-			'search' => $search,
+			'search' => $search . '*',
 		];
 
 
