@@ -27,7 +27,7 @@ final class MySQL implements RepositoryInterface
 		$hash = hash('sha512', $url);
 		$query = $this->dbConnection->prepare('DELETE FROM docentries WHERE entryhash = :hash');
 		$query->execute([
-			'hash' => hash('sha512', $hash),
+			'hash' => $hash,
 		]);
 	}
 

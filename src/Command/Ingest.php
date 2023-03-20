@@ -7,6 +7,7 @@
 
 namespace Docsdangit\Command;
 
+use Docsdangit\Parsers\Make_WordPress;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,6 +44,8 @@ EOT);
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $wp_docs = new Make_WordPress();
+        $wp_docs->parse();
         $wp_docs = new WordPress_Docs();
         $wp_docs->parse();
         $wp_docs = new WP_CLI();
