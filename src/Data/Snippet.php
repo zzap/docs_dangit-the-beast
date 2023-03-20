@@ -13,6 +13,7 @@ namespace Docsdangit\Data;
  */
 class Snippet {
     private string $id;
+    private string $title;
     private array $snippets;
     private string $context;
     private string $source;
@@ -31,6 +32,7 @@ class Snippet {
      * Snippets constructor.
      *
      * @param string $id
+     * @param string $title
      * @param array $snippets
      * @param string $context
      * @param string $source
@@ -47,6 +49,7 @@ class Snippet {
      */
     public function __construct(
         string $id,
+        string $title,
         array $snippets,
         string $context,
         string $source,
@@ -62,6 +65,7 @@ class Snippet {
         string $updated
     ) {
         $this->id = $id;
+        $this->title = $title;
         $this->snippets = $snippets;
         $this->context = $context;
         $this->source = $source;
@@ -79,6 +83,10 @@ class Snippet {
 
     public function get_id() : string {
         return $this->id;
+    }
+
+    public function get_title() : string {
+        return $this->title;
     }
 
     public function get_snippets() : array {

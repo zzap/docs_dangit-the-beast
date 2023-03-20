@@ -66,12 +66,15 @@ class WP_CLI implements Parser {
             ];
         }
 
+        $title = 'wp ' . implode(' ', $commands );
+
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
             'id' => $id,
+            'title' => $title,
             'snippets' => $code_snippets,
             'context' => '',
-            'source' => 'wp-cli',
+            'source' => 'wpcli',
             'tags' => ['WordPress'],
             'command_tags' => $commands,
             'code_language_tags' => ['bash'],

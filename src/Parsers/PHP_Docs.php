@@ -95,9 +95,10 @@ class PHP_Docs implements Parser {
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
             'id' => $id,
+            'title' => $fn_name,
             'snippets' => $code_snippets,
             'context' => '',
-            'source' => 'php',
+            'source' => 'php_reference',
             'tags' => ['php'],
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],

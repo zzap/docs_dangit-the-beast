@@ -76,12 +76,17 @@ class WordPress_Docs implements Parser {
             }
         }
 
+        // get title
+        $url_parts = explode( '/', $item->link );
+        $title = $url_parts[ count( $url_parts ) - 2 ];
+
         $now = date( 'Y-m-d H:i:s' );
         $snippet_data = [
             'id' => $id,
+            'title' => $title,
             'snippets' => $code_snippets,
             'context' => $item->content->rendered,
-            'source' => 'reference',
+            'source' => 'wordpress_reference',
             'tags' => ['WordPress'],
             'command_tags' => $command_tags,
             'code_language_tags' => ['php'],
