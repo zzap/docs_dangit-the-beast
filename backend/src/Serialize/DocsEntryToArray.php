@@ -13,7 +13,7 @@ final class DocsEntryToArray
 	{
 		$content = [
 			'code_snippet' => [],
-			'code' => $entry->codeBlock->code,
+			'code' => trim($entry->codeBlock->code),
 			'code_language' => $entry->codeBlock->language,
 			'command_tags' => [],
 			'tags' => [],
@@ -23,12 +23,12 @@ final class DocsEntryToArray
 			'code_creation_datetime' => (string) $entry->codeCreationDateTime->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s'),
 			'source' => (string) $entry->docsSource,
 			'version' => (string) $entry->docsVersion,
-			'function' => (string) $entry->docsFunction,
+			'title' => (string) $entry->docsFunction,
 			'language' => (string) $entry->language,
         ];
 
 		$content['code_snippet'][] = [
-			'code' => $entry->codeBlock->code,
+			'code' => trim($entry->codeBlock->code),
 			'language' => $entry->codeBlock->language,
 		];
 
