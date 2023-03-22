@@ -64,7 +64,7 @@ URL: https://make.wordpress.org/core/tag/dev-notes/
 
 ### Backend
 
-Parsers are built on top of [Symfony Console](https://symfony.com/doc/current/components/console.html) component. At the moment of building the tool (CloudFest hackathon 2023), there are two parsers:
+Parsers are built on top of [Symfony Console](https://symfony.com/doc/current/components/console.html) component. At the moment of building the tool (CloudFest hackathon 2023), there are four parsers:
 - [WordPress code reference](https://github.com/zzap/docs_dangit-the-beast/blob/main/src/Parsers/WordPress_Docs.php)
 - [WP-CLI](https://github.com/zzap/docs_dangit-the-beast/blob/main/src/Parsers/WP_CLI.php)
 - [PHP code reference](https://github.com/zzap/docs_dangit-the-beast/blob/main/src/Parsers/PHP_Docs.php)
